@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: redbook-nacos
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.16.93.128:8848
+        file-extension: yaml

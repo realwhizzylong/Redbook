@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.thrd.mapper.CommentMapperCustom">
+    <select id="getCommentList" parameterType="map" resultType="com.example.thrd.vo.CommentVO">
+        select
+        c.id as commentId, c.vlog_id as vlogId, u.id as vlogerId, u.nickname as commentUserNickname,
+        u.face as commentUserFace, c.father_comment_id as fatherCommentId, c.comment_user_id as commentUserId,
+        c.content as content, c.like_counts as likeCounts, fu.nickname as replyUserNickname,
+        c.create_time as createTime
+        from
+        `comment` as c
+        left join
+        users as u
+        on
+        c.comment_user_id = u.id
+        left join
+        `comment` as fc
+        on
+        c.father_comment_id = fc.id
+        left join
+        users as fu
+        on
+        fc.comment_user_id = fu.id
+        where
+        c.vlog_id = #{paramMap.vlogId}
+        order by
+        c.like_counts desc,
+        c.create_time desc
+  </select>
+</mapper>

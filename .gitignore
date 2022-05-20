@@ -1,0 +1,7 @@
+# Project exclude paths
+/mybatis-generator-database/target/
+/redbook-api/target/
+/redbook-common/target/
+/redbook-mapper/target/
+/redbook-model/target/
+/redbook-service/target/

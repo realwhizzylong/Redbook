@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.thrd.mapper.VlogMapperCustom">
+    <select id="getIndexVlogList" parameterType="map" resultType="com.example.thrd.vo.IndexVlogVO">
+        select v.id as vlogId, v.vloger_id as vlogerId, u.face as vlogerFace, u.nickname as vlogerName,
+        v.title as content, v.url as url, v.cover as cover, v.width as width, v.height as height,
+        v.like_counts as likeCounts, v.comments_counts as commentsCounts, v.is_private as isPrivate
+        from
+        vlog v
+        left join
+        users u
+        on
+        v.vloger_id = u.id
+        where
+        v.is_private = 0
+        <if test="paramMap.search != null and paramMap.search != ''">
+            and v.title like '%${paramMap.search}%'
+        </if>
+        order by
+        v.created_time
+        desc
+    </select>
+    <select id="getVlogDetailById" parameterType="map" resultType="com.example.thrd.vo.IndexVlogVO">
+        select v.id as vlogId, v.vloger_id as vlogerId, u.face as vlogerFace, u.nickname as vlogerName,
+        v.title as content, v.url as url, v.cover as cover, v.width as width, v.height as height,
+        v.like_counts as likeCounts, v.comments_counts as commentsCounts, v.is_private as isPrivate
+        from
+        vlog v
+        left join
+        users u
+        on
+        v.vloger_id = u.id
+        where
+        v.id = #{paramMap.vlogId}
+    </select>
+    <select id="getMyLikedVlogList" parameterType="map" resultType="com.example.thrd.vo.IndexVlogVO">
+        select v.id as vlogId, v.vloger_id as vlogerId, v.title as content, v.url as url, v.cover as cover,
+        v.width as width, v.height as height, v.like_counts as likeCounts, v.comments_counts as commentsCounts,
+        v.is_private as isPrivate
+        from
+        vlog v
+        left join
+        my_liked_vlog mlv
+        on
+        v.id = mlv.vlog_id
+        left join
+        users u
+        on
+        mlv.user_id = u.id
+        where
+        u.id = #{paramMap.userId}
+        and
+        v.is_private = 0
+        order by
+        v.created_time
+        desc
+    </select>
+    <select id="getMyFollowVlogList" parameterType="map" resultType="com.example.thrd.vo.IndexVlogVO">
+        select v.id as vlogId, v.vloger_id as vlogerId, u.face as vlogerFace, u.nickname as vlogerName,
+        v.title as content, v.url as url, v.cover as cover, v.width as width, v.height as height,
+        v.like_counts as likeCounts, v.comments_counts as commentsCounts, v.is_private as isPrivate
+        from
+        vlog v
+        left join
+        fans f
+        on
+        v.vloger_id = f.vloger_id
+        left join
+        users u
+        on
+        f.vloger_id = u.id
+        where
+        f.fan_id = #{paramMap.myId}
+        and
+        v.is_private = 0
+        order by
+        v.created_time
+        desc
+    </select>
+    <select id="getMyFriendVlogList" parameterType="map" resultType="com.example.thrd.vo.IndexVlogVO">
+        select v.id as vlogId, v.vloger_id as vlogerId, u.face as vlogerFace, u.nickname as vlogerName,
+        v.title as content, v.url as url, v.cover as cover, v.width as width, v.height as height,
+        v.like_counts as likeCounts, v.comments_counts as commentsCounts, v.is_private as isPrivate
+        from
+        vlog v
+        left join
+        fans f
+        on
+        v.vloger_id = f.fan_id
+        left join
+        users u
+        on
+        f.fan_id = u.id
+        where
+        f.vloger_id = #{paramMap.myId}
+        and
+        f.is_fan_friend_of_mine = 1
+        and
+        v.is_private = 0
+        order by
+        v.created_time
+        desc
+    </select>
+</mapper>
